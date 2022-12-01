@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.autobots.automanager.entidades.Cliente;
+import com.autobots.automanager.entidades.Documento;
 import com.autobots.automanager.entidades.Telefone;
 import com.autobots.automanager.repositorios.ClienteRepositorio;
 
@@ -36,9 +37,14 @@ public class TelefoneControle {
 	}
 	
 	@DeleteMapping("/excluir/{clienteId}")
-	public void excluirDocumento(@PathVariable Long clienteId, @RequestBody Telefone telefoneExclusao ) {
+	public void excluirTelefone(@PathVariable Long clienteId, @RequestBody Telefone telefoneExclusao ) {
 		Cliente alvo = repositorioCliente.getById(clienteId);
-		alvo.getTelefones().remove(alvo.getTelefones().indexOf(telefoneExclusao));
+		for (Telefone tel: alvo.getTelefones()) {
+			if (tel.getId() == telefoneExclusao.getId()) {
+				alvo.getTelefones().remove(tel);
+				break;
+			}
+		}
 		repositorioCliente.save(alvo);
 	}
 }

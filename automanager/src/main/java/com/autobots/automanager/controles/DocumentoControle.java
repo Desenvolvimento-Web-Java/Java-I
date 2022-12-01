@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.autobots.automanager.entidades.Cliente;
 import com.autobots.automanager.entidades.Documento;
+import com.autobots.automanager.entidades.Telefone;
 import com.autobots.automanager.repositorios.ClienteRepositorio;
 
 @RestController
@@ -38,7 +39,12 @@ public class DocumentoControle {
 	@DeleteMapping("/excluir/{clienteId}")
 	public void excluirDocumento(@PathVariable Long clienteId, @RequestBody Documento documentoExclusao ) {
 		Cliente alvo = repositorioCliente.getById(clienteId);
-		alvo.getDocumentos().remove(alvo.getDocumentos().indexOf(documentoExclusao));
+		for (Documento doc: alvo.getDocumentos()) {
+			if (doc.getId() == documentoExclusao.getId()) {
+				alvo.getDocumentos().remove(doc);
+				break;
+			}
+		}
 		repositorioCliente.save(alvo);
 	}
 }
